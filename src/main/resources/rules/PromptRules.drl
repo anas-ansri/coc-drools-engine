@@ -1,0 +1,42 @@
+package rules
+
+import com.example.coc.model.Prompt;
+
+rule "Hate Speech Detection"
+    salience 100 // High salience for high priority
+    when
+        p : Prompt( text.toLowerCase().matches(".*(hate|kill|destroy).*") )
+    then
+        p.setViolation("Hate Speech");
+        p.setSeverityScore(90);
+        System.out.println("Rule Fired: Hate Speech Detection");
+end
+
+rule "Harassment Detection"
+    salience 80 // Medium-high salience
+    when
+        p : Prompt( text.toLowerCase().matches(".*(attack|threaten|stalk).*") )
+    then
+        p.setViolation("Harassment");
+        p.setSeverityScore(75);
+        System.out.println("Rule Fired: Harassment Detection");
+end
+
+rule "Mild Inappropriate Content"
+    salience 50 // Medium salience
+    when
+        p : Prompt( text.toLowerCase().matches(".*(damn|hell|crap).*") )
+    then
+        p.setViolation("Mild Inappropriate Content");
+        p.setSeverityScore(40);
+        System.out.println("Rule Fired: Mild Inappropriate Content");
+end
+
+rule "Default No Violation"
+    salience 0 // Low salience, fires if no other rules match
+    when
+        p : Prompt( violation == "No violation detected by Drools rules." )
+    then
+        // Keep default values, this rule just confirms no specific violation was found by others
+        System.out.println("Rule Fired: Default No Violation");
+end 
