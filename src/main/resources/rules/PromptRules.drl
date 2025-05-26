@@ -2,41 +2,135 @@ package rules
 
 import com.example.coc.model.Prompt;
 
+// High Severity Rules (80-100)
 rule "Hate Speech Detection"
-    salience 100 // High salience for high priority
+    salience 100
     when
-        p : Prompt( text.toLowerCase().matches(".*(hate|kill|destroy).*") )
+        p : Prompt( text.toLowerCase().matches(".*(hate|kill|destroy|exterminate|annihilate|genocide).*") )
     then
         p.setViolation("Hate Speech");
         p.setSeverityScore(90);
         System.out.println("Rule Fired: Hate Speech Detection");
 end
 
-rule "Harassment Detection"
-    salience 80 // Medium-high salience
+rule "Extreme Violence"
+    salience 95
     when
-        p : Prompt( text.toLowerCase().matches(".*(attack|threaten|stalk).*") )
+        p : Prompt( text.toLowerCase().matches(".*(murder|torture|massacre|slaughter|butcher).*") )
+    then
+        p.setViolation("Extreme Violence");
+        p.setSeverityScore(95);
+        System.out.println("Rule Fired: Extreme Violence");
+end
+
+rule "Discriminatory Language"
+    salience 90
+    when
+        p : Prompt( text.toLowerCase().matches(".*(racist|sexist|homophobic|transphobic|bigot).*") )
+    then
+        p.setViolation("Discriminatory Language");
+        p.setSeverityScore(85);
+        System.out.println("Rule Fired: Discriminatory Language");
+end
+
+// Medium-High Severity Rules (60-79)
+rule "Harassment Detection"
+    salience 80
+    when
+        p : Prompt( text.toLowerCase().matches(".*(attack|threaten|stalk|bully|intimidate).*") )
     then
         p.setViolation("Harassment");
         p.setSeverityScore(75);
         System.out.println("Rule Fired: Harassment Detection");
 end
 
-rule "Mild Inappropriate Content"
-    salience 50 // Medium salience
+rule "Sexual Harassment"
+    salience 75
     when
-        p : Prompt( text.toLowerCase().matches(".*(damn|hell|crap).*") )
+        p : Prompt( text.toLowerCase().matches(".*(sexual|inappropriate|unwanted|advances|harass).*") )
+    then
+        p.setViolation("Sexual Harassment");
+        p.setSeverityScore(70);
+        System.out.println("Rule Fired: Sexual Harassment");
+end
+
+rule "Personal Attacks"
+    salience 70
+    when
+        p : Prompt( text.toLowerCase().matches(".*(stupid|idiot|dumb|worthless|useless).*") )
+    then
+        p.setViolation("Personal Attacks");
+        p.setSeverityScore(65);
+        System.out.println("Rule Fired: Personal Attacks");
+end
+
+// Medium Severity Rules (40-59)
+rule "Profanity"
+    salience 60
+    when
+        p : Prompt( text.toLowerCase().matches(".*(fuck|shit|bitch|asshole|damn).*") )
+    then
+        p.setViolation("Profanity");
+        p.setSeverityScore(55);
+        System.out.println("Rule Fired: Profanity");
+end
+
+rule "Mild Inappropriate Content"
+    salience 50
+    when
+        p : Prompt( text.toLowerCase().matches(".*(damn|hell|crap|jerk|stupid).*") )
     then
         p.setViolation("Mild Inappropriate Content");
         p.setSeverityScore(40);
         System.out.println("Rule Fired: Mild Inappropriate Content");
 end
 
+rule "Spam Detection"
+    salience 45
+    when
+        p : Prompt( text.toLowerCase().matches(".*(buy|sell|discount|offer|promotion).*") )
+    then
+        p.setViolation("Potential Spam");
+        p.setSeverityScore(45);
+        System.out.println("Rule Fired: Spam Detection");
+end
+
+// Low Severity Rules (20-39)
+rule "Off-Topic Content"
+    salience 30
+    when
+        p : Prompt( text.toLowerCase().matches(".*(unrelated|off-topic|irrelevant).*") )
+    then
+        p.setViolation("Off-Topic Content");
+        p.setSeverityScore(30);
+        System.out.println("Rule Fired: Off-Topic Content");
+end
+
+rule "Excessive Caps"
+    salience 25
+    when
+        p : Prompt( text.matches(".*[A-Z]{5,}.*") )
+    then
+        p.setViolation("Excessive Capitalization");
+        p.setSeverityScore(25);
+        System.out.println("Rule Fired: Excessive Caps");
+end
+
+rule "Multiple Exclamation Marks"
+    salience 20
+    when
+        p : Prompt( text.matches(".*!{3,}.*") )
+    then
+        p.setViolation("Excessive Punctuation");
+        p.setSeverityScore(20);
+        System.out.println("Rule Fired: Multiple Exclamation Marks");
+end
+
+// Default Rule
 rule "Default No Violation"
-    salience 0 // Low salience, fires if no other rules match
+    salience 0
     when
         p : Prompt( violation == "No violation detected by Drools rules." )
     then
-        // Keep default values, this rule just confirms no specific violation was found by others
         System.out.println("Rule Fired: Default No Violation");
 end 
